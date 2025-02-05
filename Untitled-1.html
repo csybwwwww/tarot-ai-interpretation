@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>塔罗牌 AI 解读</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 30px;
+            padding: 20px;
+            background-color: #f4f4f4;
+        }
+        h2 {
+            text-align: center;
+        }
+        label, input, textarea, button {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            font-size: 16px;
+        }
+        button {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        #result {
+            margin-top: 20px;
+            padding: 10px;
+            background-color: #ffffff;
+            border: 1px solid #ddd;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <h2>塔罗牌 AI 解读</h2>
+    
+    <!-- 用户输入部分 -->
+    <label for="question">你的问题：</label>
+    <input type="text" id="question" placeholder="请输入你的问题" required>
+    
+    <label for="cards">抽到的塔罗牌（用逗号隔开）：</label>
+    <input type="text" id="cards" placeholder="例如：恋人，隐士，审判" required>
+    
+    <button onclick="submitForm()">提交</button>
+    
+    <!-- 解读结果显示区域 -->
+    <div id="result"></div>
+
+    <script>
+        async function submitForm() {
+            const question = document.getElementById("question").value;
+            const cards = document.getElementById("cards").value;
+            
+            if (!question || !cards) {
+                alert("请填写所有字段！");
+                return;
+            }
+
+            // 向 Google Apps Script 后端发送数据
+            const response = await fetch("https://script.google.com/macros/s/YOUR_SCRIPT_URL/exec", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({ question: question, cards: cards })
+            });
+
+            const data = await response.json();
+            document.getElementById("result").style.display = "block";
+            document.getElementById("result").innerText = data.result || "无法生成解读，请稍后再试。";
+        }
+    </script>
+</body>
+</html>
